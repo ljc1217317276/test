@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.generator.mapper.VehiclesMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.generator.pojo.Vehicles">
+            <id property="vehicleId" column="vehicle_id" jdbcType="INTEGER"/>
+            <result property="model" column="model" jdbcType="VARCHAR"/>
+            <result property="make" column="make" jdbcType="VARCHAR"/>
+            <result property="year" column="year" jdbcType="OTHER"/>
+            <result property="price" column="price" jdbcType="DECIMAL"/>
+            <result property="color" column="color" jdbcType="VARCHAR"/>
+            <result property="engineType" column="engine_type" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+            <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        vehicle_id,model,make,
+        year,price,color,
+        engine_type,status,created_at,
+        updated_at
+    </sql>
+    <insert id="addAll">
+        insert into vehicles
+        (vehicle_id, model, make,
+         year, price, color,
+         engine_type, status, created_at,
+         updated_at)
+        values (#{vehicleId,jdbcType=NUMERIC}, #{model,jdbcType=VARCHAR}, #{make,jdbcType=VARCHAR},
+                #{year}, #{price,jdbcType=DECIMAL}, #{color,jdbcType=VARCHAR},
+                #{engineType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP},
+                #{updatedAt,jdbcType=TIMESTAMP})
+
+    </insert>
+    <select id="selectAllByModel" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from vehicles
+        where
+        model = #{model,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByVehicleId">
+        delete
+        from vehicles
+        where vehicle_id = #{vehicleId,jdbcType=NUMERIC}
+    </delete>
+    <update id="updateSelective">
+        update vehicles
+        <set>
+            <if test="model != null">model=#{model,jdbcType=VARCHAR},</if>
+            <if test="make != null">make=#{make,jdbcType=VARCHAR},</if>
+            <if test="year != null">year=#{year},</if>
+            <if test="price != null">price=#{price,jdbcType=DECIMAL},</if>
+            <if test="color != null">color=#{color,jdbcType=VARCHAR},</if>
+            <if test="engineType != null">engine_type=#{engineType,jdbcType=VARCHAR},</if>
+            <if test="status != null">status=#{status,jdbcType=VARCHAR},</if>
+            <if test="createdAt != null">created_at=#{createdAt,jdbcType=TIMESTAMP},</if>
+            <if test="updatedAt != null">updated_at=#{updatedAt,jdbcType=TIMESTAMP},</if>
+        </set>
+        where vehicleId = #{vehicleId,jdbcType=NUMERIC}
+    </update>
+    <select id="selectByVehicleId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from vehicles
+        where
+        vehicle_id = #{vehicleId,jdbcType=NUMERIC}
+    </select>
+    <insert id="insertSelective">
+        insert into vehicles
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vehicleId != null">vehicle_id,</if>
+            <if test="model != null">model,</if>
+            <if test="make != null">make,</if>
+            <if test="year != null">year,</if>
+            <if test="price != null">price,</if>
+            <if test="color != null">color,</if>
+            <if test="engineType != null">engine_type,</if>
+            <if test="status != null">status,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vehicleId != null">#{vehicleId,jdbcType=INTEGER},</if>
+            <if test="model != null">#{model,jdbcType=VARCHAR},</if>
+            <if test="make != null">#{make,jdbcType=VARCHAR},</if>
+            <if test="year != null">#{year,jdbcType=OTHER},</if>
+            <if test="price != null">#{price,jdbcType=DECIMAL},</if>
+            <if test="color != null">#{color,jdbcType=VARCHAR},</if>
+            <if test="engineType != null">#{engineType,jdbcType=VARCHAR},</if>
+            <if test="status != null">#{status,jdbcType=VARCHAR},</if>
+            <if test="createdAt != null">#{createdAt,jdbcType=TIMESTAMP},</if>
+            <if test="updatedAt != null">#{updatedAt,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+</mapper>

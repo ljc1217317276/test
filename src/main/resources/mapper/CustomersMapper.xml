@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.generator.mapper.CustomersMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.generator.pojo.Customers">
+            <id property="customerId" column="customer_id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="contactNumber" column="contact_number" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+            <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        customer_id,name,contact_number,
+        email,address,created_at,
+        updated_at
+    </sql>
+    <insert id="insertBatch">
+        insert into customers(customer_id,name,contact_number,
+        email,address,created_at,
+        updated_at)
+        values
+        <foreach collection="customersCollection" item="item" separator=",">
+            (#{item.customerId,jdbcType=NUMERIC},#{item.name,jdbcType=VARCHAR},#{item.contactNumber,jdbcType=VARCHAR},
+            #{item.email,jdbcType=VARCHAR},#{item.address,jdbcType=VARCHAR},#{item.createdAt,jdbcType=TIMESTAMP},
+            #{item.updatedAt,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+    <insert id="insertBatchSelective"></insert>
+    <update id="updateByCustomerName"></update>
+    <delete id="deleteByCustomerId">
+        delete
+        from customers
+        where customer_id = #{customerId,jdbcType=NUMERIC}
+    </delete>
+    <select id="selectAllByCustomerId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from customers
+        where
+        customer_id = #{customerId,jdbcType=NUMERIC}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from customers
+    </select>
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.generator.mapper.SalesMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.generator.pojo.Sales">
+            <id property="saleId" column="sale_id" jdbcType="INTEGER"/>
+            <result property="vehicleId" column="vehicle_id" jdbcType="INTEGER"/>
+            <result property="customerId" column="customer_id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="saleDate" column="sale_date" jdbcType="DATE"/>
+            <result property="salePrice" column="sale_price" jdbcType="DECIMAL"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+            <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        sale_id,vehicle_id,customer_id,
+        user_id,sale_date,sale_price,
+        created_at,updated_at
+    </sql>
+    <update id="updateSalePrice">
+        update sales
+        set sale_price = #{salePrice}
+    </update>
+    <delete id="deleteByCustomerId">
+        delete
+        from sales
+        where customer_id = #{customerId,jdbcType=NUMERIC}
+    </delete>
+    <select id="selectAllByCustomerId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sales
+        where
+        customer_id = #{customerId,jdbcType=NUMERIC}
+    </select>
+    <insert id="insertAll">
+        insert into sales
+        (sale_id, vehicle_id, customer_id,
+         user_id, sale_date, sale_price,
+         created_at, updated_at)
+        values (#{saleId,jdbcType=NUMERIC}, #{vehicleId,jdbcType=NUMERIC}, #{customerId,jdbcType=NUMERIC},
+                #{userId,jdbcType=NUMERIC}, #{saleDate,jdbcType=TIMESTAMP}, #{salePrice,jdbcType=DECIMAL},
+                #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
+
+    </insert>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sales
+    </select>
+    <update id="updateUpdatedAt">
+        update sales
+        set updated_at = #{updatedAt}
+    </update>
+    <update id="updateSelective">
+        update sales
+        <set>
+            <if test="vehicleId != null">vehicle_id=#{vehicleId,jdbcType=NUMERIC},</if>
+            <if test="customerId != null">customer_id=#{customerId,jdbcType=NUMERIC},</if>
+            <if test="userId != null">user_id=#{userId,jdbcType=NUMERIC},</if>
+            <if test="saleDate != null">sale_date=#{saleDate,jdbcType=TIMESTAMP},</if>
+            <if test="salePrice != null">sale_price=#{salePrice,jdbcType=DECIMAL},</if>
+            <if test="createdAt != null">created_at=#{createdAt,jdbcType=TIMESTAMP},</if>
+            <if test="updatedAt != null">updated_at=#{updatedAt,jdbcType=TIMESTAMP},</if>
+        </set>
+        where saleId = #{saleId,jdbcType=NUMERIC}
+    </update>
+</mapper>

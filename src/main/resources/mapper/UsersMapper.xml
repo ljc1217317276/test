@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.generator.mapper.UsersMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.generator.pojo.Users">
+            <id property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="role" column="role" jdbcType="VARCHAR"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+            <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,username,password,
+        email,role,created_at,
+        updated_at
+    </sql>
+    <insert id="addAll">
+        insert into users
+        (user_id, username, password,
+         email, role, created_at,
+         updated_at)
+        values (#{userId,jdbcType=NUMERIC}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                #{email,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP},
+                #{updatedAt,jdbcType=TIMESTAMP})
+
+    </insert>
+    <select id="selectAllByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where
+        user_id = #{userId,jdbcType=NUMERIC}
+    </select>
+    <update id="updateSelective">
+        update users
+        <set>
+            <if test="username != null">username=#{username,jdbcType=VARCHAR},</if>
+            <if test="password != null">password=#{password,jdbcType=VARCHAR},</if>
+            <if test="email != null">email=#{email,jdbcType=VARCHAR},</if>
+            <if test="role != null">role=#{role,jdbcType=VARCHAR},</if>
+            <if test="createdAt != null">created_at=#{createdAt,jdbcType=TIMESTAMP},</if>
+            <if test="updatedAt != null">updated_at=#{updatedAt,jdbcType=TIMESTAMP},</if>
+        </set>
+        where userId = #{userId,jdbcType=NUMERIC}
+    </update>
+    <delete id="deleteByUserId">
+        delete
+        from users
+        where user_id = #{userId,jdbcType=NUMERIC}
+    </delete>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+    </select>
+    <insert id="insertSelective">
+        insert into users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="email != null">email,</if>
+            <if test="role != null">role,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId,jdbcType=INTEGER},</if>
+            <if test="username != null">#{username,jdbcType=VARCHAR},</if>
+            <if test="password != null">#{password,jdbcType=VARCHAR},</if>
+            <if test="email != null">#{email,jdbcType=VARCHAR},</if>
+            <if test="role != null">#{role,jdbcType=VARCHAR},</if>
+            <if test="createdAt != null">#{createdAt,jdbcType=TIMESTAMP},</if>
+            <if test="updatedAt != null">#{updatedAt,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <select id="selectAllByEmail" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where
+        email = #{email,jdbcType=VARCHAR}
+    </select>
+</mapper>
